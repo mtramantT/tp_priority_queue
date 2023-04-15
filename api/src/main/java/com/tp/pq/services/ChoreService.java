@@ -22,8 +22,13 @@ public class ChoreService {
         return choreRepo.getReferenceById(id);
     }
 
-    public Chore createChore(Chore chore) {
+    public Chore saveChore(Chore chore) {
         return choreRepo.save(chore);
+    }
+
+    public Chore deleteChore(Chore chore) {
+        choreRepo.delete(chore);
+        return chore;
     }
 
 }

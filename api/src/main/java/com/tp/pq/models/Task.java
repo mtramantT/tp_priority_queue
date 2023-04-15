@@ -1,5 +1,7 @@
 package com.tp.pq.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,5 +34,6 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "chore_id")
+    @JsonBackReference
     private Chore chore;
 }

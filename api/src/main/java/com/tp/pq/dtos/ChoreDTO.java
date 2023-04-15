@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChoreDTO {
-    private int id;
+    private long id;
     private String name;
     private String description;
-    private int points;
+    private int priority;
     private List<Task> tasks;
 
     // private int frequency;

@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,14 +37,18 @@ public class ChoreController {
     }
 
     @GetMapping("/chores")
-    public List<ChoreDTO> getAllChores() {
+    public ResponseEntity<CollectionModel<EntityModel<ChoreDTO>>> getAllChores() {
         List<Chore> chores = choreService.getAllChores();
-        List<ChoreDTO> choreDTOs = new ArrayList<>();
+        List<EntityModel<ChoreDTO>> choreEntities = new ArrayList<>();
         for (Chore chore : chores) {
             ChoreDTO choreDTO = mapper.map(chore, ChoreDTO.class);
-            choreDTOs.add(choreDTO);
+            EntityModel<ChoreDTO> choreEntity = EntityModel.of(choreDTO);
+            choreEntity.add(Link.of("/chores/chore/" + choreDTO.getId()).withSelfRel());
+            choreEntities.add(choreEntity);
         }
-        return choreDTOs;
+        CollectionModel<EntityModel<ChoreDTO>> collectionModel = CollectionModel.of(choreEntities);
+        collectionModel.add(Link.of("/chores").withSelfRel());
+        return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping("/chore/{id}")
@@ -52,38 +59,38 @@ public class ChoreController {
     }
 
     @PostMapping("/chore")
-    public ChoreDTO createChore(ChoreDTO choreDTO) {
+    public ResponseEntity<ChoreDTO> createChore(ChoreDTO choreDTO) {
         Chore chore = mapper.map(choreDTO, Chore.class);
-        chore = choreService.createChore(chore);
+        chore = choreService.saveChore(chore);
         choreDTO = mapper.map(chore, ChoreDTO.class);
-        return choreDTO;
+        return ResponseEntity.ok(choreDTO);
     }
 
     @DeleteMapping("/chore/{id}")
-    public ChoreDTO deleteChore(@PathVariable int id) {
+    public ResponseEntity<ChoreDTO> deleteChore(@PathVariable int id) {
         Chore chore = choreService.getChoreById(id);
         ChoreDTO choreDTO = mapper.map(chore, ChoreDTO.class);
         chore = choreService.deleteChore(chore);
         choreDTO = mapper.map(chore, ChoreDTO.class);
-        return choreDTO;
+        return ResponseEntity.ok(choreDTO);
     }
 
     @PutMapping("/chore/{id}")
-    public ChoreDTO updateChore(@PathVariable int id, ChoreDTO choreDTO) {
+    public ResponseEntity<ChoreDTO> updateChore(@PathVariable int id, ChoreDTO choreDTO) {
         Chore chore = choreService.getChoreById(id);
         chore = mapper.map(choreDTO, Chore.class);
-        chore = choreService.createChore(chore);
+        chore = choreService.saveChore(chore);
         choreDTO = mapper.map(chore, ChoreDTO.class);
-        return choreDTO;
+        return ResponseEntity.ok(choreDTO);
     }
 
     @PatchMapping("/chore/{id}")
-    public ChoreDTO patchChore(@PathVariable int id, ChoreDTO choreDTO) {
+    public ResponseEntity<ChoreDTO> patchChore(@PathVariable int id, ChoreDTO choreDTO) {
         Chore chore = choreService.getChoreById(id);
         chore = mapper.map(choreDTO, Chore.class);
-        chore = choreService.createChore(chore);
+        chore = choreService.saveChore(chore);
         choreDTO = mapper.map(chore, ChoreDTO.class);
-        return choreDTO;
+        return ResponseEntity.ok(choreDTO);
     }
 
 }

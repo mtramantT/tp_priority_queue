@@ -2,6 +2,8 @@ package com.tp.pq.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,5 +34,6 @@ public class Chore {
     private int priority;
 
     @OneToMany(mappedBy = "chore")
+    @JsonManagedReference
     private List<Task> tasks;
 }
