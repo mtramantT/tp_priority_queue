@@ -8,6 +8,13 @@ const getChores = async (): Promise<ChoreCollectionDTO> => {
    return data;
 };
 
+// Fetch call to get the next priority chore from the API
+const getNextChore = async (): Promise<ChoreDTO> => {
+   const response = await fetch('http://localhost:8080/pq/next');
+   const data = await response.json();
+   return data;
+};
+
 interface ChoreTaskDTO {
    name: string;
    description: string;
@@ -40,6 +47,7 @@ interface ChoreCollectionDTO {
 
 function App() {
    const [chores, setChores] = React.useState<ChoreDTO[]>([]);
+   const [nextChore, setNextChore] = React.useState<ChoreDTO>();
 
    useEffect(() => {
       getChores().then((data) => {
@@ -47,8 +55,16 @@ function App() {
       });
    }, []);
 
+   useEffect(() => {
+      getNextChore().then((data) => {
+         setNextChore(data);
+      });
+   }, []);
+
    return (
       <div>
+         <div>{nextChore?.name}</div>
+         <div>Add Chore</div>
          <ul>
             {chores.map((chore, index) => (
                <li key={chore.name}>{chore.name}</li>
