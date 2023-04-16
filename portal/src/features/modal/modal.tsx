@@ -33,7 +33,7 @@ const Modal: React.FC<Props> = (props: Props) => {
       <>
          {isOpen && (
             <ModalOverlay onClick={toggle}>
-               <ModalBody>{children}</ModalBody>
+               <ModalBody onClick={(e) => e.stopPropagation()}>{children}</ModalBody>
             </ModalOverlay>
          )}
       </>

@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
+import useModal from './features/modal/useModal';
+import Modal from './features/modal/modal';
 
 // Fetch call to get Chores from the API
 const getChores = async (): Promise<ChoreCollectionDTO> => {
@@ -48,6 +50,7 @@ interface ChoreCollectionDTO {
 function App() {
    const [chores, setChores] = React.useState<ChoreDTO[]>([]);
    const [nextChore, setNextChore] = React.useState<ChoreDTO>();
+   const { isOpen, toggle } = useModal();
 
    useEffect(() => {
       getChores().then((data) => {
@@ -63,8 +66,18 @@ function App() {
 
    return (
       <div>
+         <h1>T-Portal Priority Queue</h1>
+         <h2>Next Chore</h2>
          <div>{nextChore?.name}</div>
-         <div>Add Chore</div>
+         <h2>New Chore?</h2>
+         <div>
+            <button onClick={toggle}>Add New</button>
+            <Modal isOpen={isOpen} toggle={toggle}>
+               <h3>Modal</h3>
+               <p>Modal Content</p>
+            </Modal>
+         </div>
+         <h2>Chores</h2>
          <ul>
             {chores.map((chore, index) => (
                <li key={chore.name}>{chore.name}</li>
