@@ -6,10 +6,8 @@ interface Props {
 }
 
 const GlobalStyleWrapper = createGlobalStyle`
-   // Fonts
    html * {
       font-family: 'Roboto Flex', sans-serif;
-      font-size: 20px;
    }
    body {
       margin: 0;

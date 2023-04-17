@@ -1,8 +1,10 @@
 package com.tp.pq.models;
 
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.tp.pq.util.FreaquenceType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,4 +38,13 @@ public class Chore {
     @OneToMany(mappedBy = "chore")
     @JsonManagedReference
     private List<Task> tasks;
+
+    @Column(name = "last_completed")
+    private Date lastCompleted;
+
+    @Column(name = "frequency")
+    private int frequency;
+
+    @Column(name = "frequency_type")
+    private String frequencyType;
 }
