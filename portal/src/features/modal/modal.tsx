@@ -9,7 +9,7 @@ interface Props {
 
 const ModalOverlay = styled.div`
    z-index: 100;
-   width: 100vh;
+   width: 100vw;
    height: 100vh;
    position: absolute;
    top: 0;
