@@ -26,7 +26,6 @@ const prodConfigs = merge(commonConfig, {
       filename: "[name].[contenthash].css",
       chunkFilename: "[id].[contenthash].css"
     }),
-    // new webpack.EnvironmentPlugin({ DeckBuilder_BASE_URL: API_URL }),
   ]
 });
 

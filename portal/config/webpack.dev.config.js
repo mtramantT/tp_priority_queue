@@ -43,7 +43,6 @@ const devConfig = merge(commonConfig, {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    // new webpack.EnvironmentPlugin({ DeckBuilder_BASE_URL: API_URL }),
     new ReactRefreshWebpackPlugin()
   ]
 });
