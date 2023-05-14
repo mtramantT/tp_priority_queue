@@ -64,13 +64,17 @@ public class Schedule {
         }
     }
 
-    public List<TimeBlock> createDefaultSchedule() {
+    public List<TimeBlock> createDefaultTimeBlocks() {
         List<TimeBlock> timeBlocks = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             TimeBlock timeBlock = TimeBlock.builder().hour(i).schedule(this).build();
             timeBlocks.add(timeBlock);
         }
         return timeBlocks;
+    }
+
+    public static Schedule createDefault() {
+        return Schedule.builder().name("My very first schedule!").build();
     }
 
 }

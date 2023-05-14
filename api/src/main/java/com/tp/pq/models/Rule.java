@@ -37,4 +37,8 @@ public class Rule {
     @ManyToOne
     @JoinColumn(name = "ruling_id")
     private Ruling ruling;
+
+    public static Rule createDefault() {
+        return Rule.builder().description("My very first rule to follow!").build();
+    }
 }

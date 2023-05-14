@@ -65,4 +65,9 @@ public class Ruling {
             rule.setRuling(null);
         }
     }
+
+    public static Ruling createDefault() {
+        return Ruling.builder().name("My very first ruling").description("This is my very first rule to follow!")
+                .color("gray").build();
+    }
 }

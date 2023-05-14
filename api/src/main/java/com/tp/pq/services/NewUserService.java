@@ -33,15 +33,13 @@ public class NewUserService {
     public void createNewUser(String username, String password) {
         User user = userRepo.save(User.builder().username(username).password(password).build());
 
-        Rule defualtRule = Rule.builder().description("My very first rule to follow!").build();
-        Ruling defaultRuling = Ruling.builder().name("My first ruling").description("My first ruling description")
-                .color("red").user(user).build();
+        Rule defualtRule = Rule.createDefault();
+        Ruling defaultRuling = Ruling.createDefault();
         defaultRuling.addRule(defualtRule);
         user.addRuling(defaultRuling);
 
-        Schedule defaultSchedule = Schedule.builder().name("My first schedule")
-                .user(user).build();
-        List<TimeBlock> defaultTimeBlocks = defaultSchedule.createDefaultSchedule();
+        Schedule defaultSchedule = Schedule.createDefault();
+        List<TimeBlock> defaultTimeBlocks = defaultSchedule.createDefaultTimeBlocks();
         user.addSchedule(defaultSchedule);
 
         userRepo.save(user);
