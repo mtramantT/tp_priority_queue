@@ -16,7 +16,7 @@ public class AuthenticationController {
     private NewUserService newUserService;
 
     @PostMapping("/new")
-    public void createNewUser(@RequestParam String username, @RequestParam String password) {
+    public void createNewUser(@RequestParam String username, @RequestParam String password) throws Exception {
         newUserService.createNewUser(username, password);
     }
 }

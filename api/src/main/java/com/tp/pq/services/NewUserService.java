@@ -2,9 +2,13 @@ package com.tp.pq.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tp.pq.models.Rule;
 import com.tp.pq.models.Ruling;
@@ -31,8 +35,11 @@ public class NewUserService {
     @Autowired
     private TimeBlockRepo timeBlockRepo;
 
-    public void createNewUser(String username, String password) {
-        // TODO: Throw Exception if user already exists
+    public void createNewUser(String username, String password) throws ResponseStatusException {
+        Optional<User> userOptional = userRepo.findByUsername(username);
+        if (userOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User already exists");
+        }
         User user = userRepo.save(User.builder().username(username).password(password).build());
 
         Rule defualtRule = Rule.createDefault();
