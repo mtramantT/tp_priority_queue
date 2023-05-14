@@ -1,5 +1,6 @@
 package com.tp.pq.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class NewUserService {
     private TimeBlockRepo timeBlockRepo;
 
     public void createNewUser(String username, String password) {
+        // TODO: Throw Exception if user already exists
         User user = userRepo.save(User.builder().username(username).password(password).build());
 
         Rule defualtRule = Rule.createDefault();
@@ -40,6 +42,7 @@ public class NewUserService {
 
         Schedule defaultSchedule = Schedule.createDefault();
         List<TimeBlock> defaultTimeBlocks = defaultSchedule.createDefaultTimeBlocks();
+        defaultTimeBlocks.forEach(timeblock -> timeblock.setRuling(defaultRuling));
         user.addSchedule(defaultSchedule);
 
         userRepo.save(user);
@@ -49,4 +52,5 @@ public class NewUserService {
         timeBlockRepo.saveAll(defaultTimeBlocks);
 
     }
+
 }
