@@ -1,6 +1,8 @@
 package com.tp.pq.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Rule {
 
     @Id
@@ -33,6 +36,5 @@ public class Rule {
 
     @ManyToOne
     @JoinColumn(name = "ruling_id")
-    @JsonBackReference
     private Ruling ruling;
 }

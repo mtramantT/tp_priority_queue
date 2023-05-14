@@ -1,9 +1,12 @@
 package com.tp.pq.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Ruling {
     @Id
     @Column(name = "id")
@@ -41,11 +45,24 @@ public class Ruling {
     private String color;
 
     @OneToMany(mappedBy = "ruling")
-    @JsonManagedReference
     private List<Rule> rules;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private User user;
+
+    public void addRule(Rule rule) {
+        if (rules == null) {
+            rules = new ArrayList<>();
+        }
+        rules.add(rule);
+        rule.setRuling(this);
+    }
+
+    public void removeRule(Rule rule) {
+        if (rules != null) {
+            rules.remove(rule);
+            rule.setRuling(null);
+        }
+    }
 }

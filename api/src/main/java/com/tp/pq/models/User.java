@@ -1,8 +1,11 @@
 package com.tp.pq.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
 
     @Id
@@ -39,10 +43,38 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
     private List<Schedule> schedules;
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
     private List<Ruling> rulings;
+
+    public void addSchedule(Schedule schedule) {
+        if (schedules == null) {
+            schedules = new ArrayList<>();
+        }
+        schedules.add(schedule);
+        schedule.setUser(this);
+    }
+
+    public void removeSchedule(Schedule schedule) {
+        if (schedules != null) {
+            schedules.remove(schedule);
+            schedule.setUser(null);
+        }
+    }
+
+    public void addRuling(Ruling ruling) {
+        if (rulings == null) {
+            rulings = new ArrayList<>();
+        }
+        rulings.add(ruling);
+        ruling.setUser(this);
+    }
+
+    public void removeRuling(Ruling ruling) {
+        if (rulings != null) {
+            rulings.remove(ruling);
+            ruling.setUser(null);
+        }
+    }
 }

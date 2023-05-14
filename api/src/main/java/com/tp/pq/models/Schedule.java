@@ -1,9 +1,12 @@
 package com.tp.pq.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Schedule {
 
     @Id
@@ -37,10 +41,36 @@ public class Schedule {
 
     @ManyToOne
     @JoinColumn(name = "pq_user_id")
-    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "schedule")
-    @JsonManagedReference
     private List<TimeBlock> timeBlocks;
+
+    public void addTimeBlock(TimeBlock timeBlock) {
+        if (timeBlocks == null) {
+            timeBlocks = new ArrayList<>();
+        }
+        timeBlocks.add(timeBlock);
+        timeBlock.setSchedule(this);
+    }
+
+    public void addAllTimeblocks(List<TimeBlock> timeBlocks) {
+        if (this.timeBlocks == null) {
+            this.timeBlocks = new ArrayList<>();
+        }
+        this.timeBlocks.addAll(timeBlocks);
+        for (TimeBlock timeBlock : timeBlocks) {
+            timeBlock.setSchedule(this);
+        }
+    }
+
+    public List<TimeBlock> createDefaultSchedule() {
+        List<TimeBlock> timeBlocks = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            TimeBlock timeBlock = TimeBlock.builder().hour(i).schedule(this).build();
+            timeBlocks.add(timeBlock);
+        }
+        return timeBlocks;
+    }
+
 }
