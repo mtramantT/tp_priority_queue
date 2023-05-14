@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 export interface TimeBlockProps {
    dataIndex: number;
-   size?: BlockSize; // Defaults to 'large'
    color?: string; // Defaults to 'white'
+   size?: BlockSize; // Defaults to 'large'
 }
 
 interface ContainerProps {
