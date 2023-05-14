@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import HourBlock from './HourBlock';
+import TimeBlock, { TimeBlockProps } from './components/TimeBlock';
 
-interface HourBlockGroupProps {
-   blocks: { blockNumber: number; color: string }[];
-   handleChangeColor: (index: number) => void;
+interface ScheduleProps {
+   //    selectedRuleSet: string;
 }
 
 const Container = styled.div`
@@ -13,26 +12,40 @@ const Container = styled.div`
    padding: 15px;
 `;
 
-const GroupRow = styled.div`
+const StandardTimeBlockRow = styled.div`
    margin-top: 10px;
    display: grid;
-   grid-template-columns: repeat(13, 1fr);
+   grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
    grid-gap: 10px;
 `;
 
-const GroupLabel = styled.div`
-   width: 50px;
-   height: 50px;
-   user-select: none;
-   text-align: center;
-   vertical-align: middle;
-   line-height: 50px;
-`;
+// const MilitaryTimeBlockRow = styled.div`
+//    margin-top: 10px;
+//    display: grid;
+//    grid-template-columns: repeat(24, 1fr);
+//    grid-gap: 10px;
+// `;
 
-const HourBlockGroup: React.FC<HourBlockGroupProps> = (props: HourBlockGroupProps) => {
-   const { blocks, handleChangeColor } = props;
+const getDefaultBlockList = (): TimeBlockProps[] => {
+   return Array.from({ length: 24 }, (_, i) => {
+      return {
+         children: i,
+
+         dataIndex: i,
+         color: 'white',
+      };
+   });
+};
+
+const Schedule: React.FC<ScheduleProps> = (props: ScheduleProps) => {
+   const {} = props;
    const [isDragging, setIsDragging] = useState<boolean>(false);
    const activeIndex = useRef<number | null>(0);
+   const [timeBlocks, setTimeBlocks] = useState<TimeBlockProps[]>(getDefaultBlockList());
+
+   useEffect(() => {
+      console.log('Set TimeBlocks from fetch or leave as default if fetch fails');
+   }, []);
 
    useEffect(() => {
       const handleEnd = () => {
@@ -47,13 +60,20 @@ const HourBlockGroup: React.FC<HourBlockGroupProps> = (props: HourBlockGroupProp
       };
    }, []);
 
+   const handleChangeColor = (index: number) => {
+      const newArr = [...timeBlocks];
+      newArr[index].color = 'red';
+      setTimeBlocks(newArr);
+   };
+
    const handleStart = (
       event: React.TouchEvent<HTMLDivElement> | React.MouseEvent<HTMLDivElement, MouseEvent>,
    ) => {
       setIsDragging(true);
       const target = event.target as HTMLElement;
-      if (target && target.dataset && target.dataset.index) {
-         const index = Number(target.dataset.index);
+      const dataIndexElement = target.closest('[data-index]') as HTMLElement;
+      if (dataIndexElement && dataIndexElement.dataset && dataIndexElement.dataset.index) {
+         const index = Number(dataIndexElement.dataset.index);
          activeIndex.current = index;
          handleChangeColor(index);
       }
@@ -79,7 +99,6 @@ const HourBlockGroup: React.FC<HourBlockGroupProps> = (props: HourBlockGroupProp
          }
       }
    };
-
    return (
       <Container
          onTouchStart={handleStart}
@@ -90,30 +109,28 @@ const HourBlockGroup: React.FC<HourBlockGroupProps> = (props: HourBlockGroupProp
          onMouseUp={handleEnd}
          onMouseLeave={handleEnd}
       >
-         <GroupRow>
-            <GroupLabel>AM</GroupLabel>
-            {blocks.slice(0, 12).map((block) => (
-               <HourBlock
-                  key={`AM${block.blockNumber}`}
-                  blockNumber={block.blockNumber}
+         <StandardTimeBlockRow>
+            {timeBlocks.slice(0, 12).map((block) => (
+               <TimeBlock
+                  key={`AM${block.dataIndex}`}
+                  dataIndex={block.dataIndex}
+                  size='large'
                   color={block.color}
-                  dataIndex={block.blockNumber}
                />
             ))}
-         </GroupRow>
-         <GroupRow>
-            <GroupLabel>PM</GroupLabel>
-            {blocks.slice(12).map((block) => (
-               <HourBlock
-                  key={`PM${block.blockNumber}`}
-                  blockNumber={block.blockNumber - 12}
+         </StandardTimeBlockRow>
+         <StandardTimeBlockRow>
+            {timeBlocks.slice(12).map((block) => (
+               <TimeBlock
+                  key={`PM${block.dataIndex}`}
+                  dataIndex={block.dataIndex}
+                  size='large'
                   color={block.color}
-                  dataIndex={block.blockNumber}
                />
             ))}
-         </GroupRow>
+         </StandardTimeBlockRow>
       </Container>
    );
 };
 
-export default HourBlockGroup;
+export default Schedule;
